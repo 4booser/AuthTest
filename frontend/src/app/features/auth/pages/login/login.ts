@@ -1,5 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
+import { LoginRequest } from '../../models/login-request';
 
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -31,7 +32,7 @@ export class Login {
       return;
     }
 
-    const request = this.form.getRawValue();
+    const request: LoginRequest = this.form.getRawValue();
 
     console.log('Login request:', request);
   }
