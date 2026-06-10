@@ -7,11 +7,11 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly http = inject(HttpClient);
+  // private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'https://localhost:5092/api';
+  // private readonly apiUrl = 'https://localhost:5092/api';
 
-  register(): Observable<> {
-    return this.http.get<>(`${this.apiUrl}/auth/register`);
-  }
+  // register(): Observable<> {
+  //   return this.http.get<>(`${this.apiUrl}/auth/register`);
+  // }
 }
