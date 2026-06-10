@@ -1,8 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RegisterRequest } from '../../models/register-request';
+import { AuthApiService } from '../../services/auth-api.service';
 
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
+import { RegisterForm } from '../../models/register-form';
 
 @Component({
   selector: 'app-register',
@@ -12,6 +14,8 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angula
 })
 
 export class Register {
+  private readonly authApi = inject(AuthApiService);
+
   protected readonly form = new FormGroup({
     email: new FormControl('', {
       nonNullable: true,
@@ -35,12 +39,24 @@ export class Register {
       return;
     }
 
-    const request: RegisterRequest = {
+    const form: RegisterForm = {
       email: formValue.email,
       password: formValue.password,
       confirmPassword: formValue.confirmPassword
     };
 
-    console.log('Register request:', request);
+    const request: RegisterRequest = {
+      email: form.email,
+      password: form.password
+    };
+
+    this.authApi.register(request).subscribe({
+      next: () => {
+        console.log('Register success');
+      },
+      error: error => {
+        console.error('Register error:', error);
+      }
+    });
   }
 }

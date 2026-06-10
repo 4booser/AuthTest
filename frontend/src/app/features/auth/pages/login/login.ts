@@ -1,6 +1,7 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { LoginRequest } from '../../models/login-request';
+import { AuthApiService } from '../../services/auth-api.service';
 
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 
@@ -12,6 +13,7 @@ import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angula
 })
 
 export class Login {
+  private readonly authApi = inject(AuthApiService);
   protected readonly isLoading = signal(false);
 
   protected readonly form = new FormGroup({
@@ -34,6 +36,17 @@ export class Login {
 
     const request: LoginRequest = this.form.getRawValue();
 
-    console.log('Login request:', request);
+    this.isLoading.set(true);
+
+    this.authApi.login(request).subscribe({
+      next: response => {
+        console.log('Login response:', response);
+        this.isLoading.set(false);
+      },
+      error: error => {
+        console.error('Login error:', error);
+        this.isLoading.set(false);
+      }
+    });
   }
 }
