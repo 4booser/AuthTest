@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { RegisterRequest } from '../../models/register-request';
 import { AuthApiService } from '../../services/auth-api.service';
@@ -15,6 +15,8 @@ import { RegisterForm } from '../../models/register-form';
 
 export class Register {
   private readonly authApi = inject(AuthApiService);
+
+  protected readonly isLoading = signal(false);
 
   protected readonly form = new FormGroup({
     email: new FormControl('', {
@@ -50,12 +52,16 @@ export class Register {
       password: form.password
     };
 
+    this.isLoading.set(true);
+
     this.authApi.register(request).subscribe({
       next: () => {
         console.log('Register success');
+        this.isLoading.set(false);
       },
       error: error => {
         console.error('Register error:', error);
+        this.isLoading.set(false);
       }
     });
   }
