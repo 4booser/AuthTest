@@ -1,1 +1,64 @@
-<p>register works!</p>
+<main class="auth-page">
+  <section class="auth-card">
+    <h1>Register</h1>
+    <p>Create a new account</p>
+
+    <form [formGroup]="form" (ngSubmit)="submit()">
+      <div class="field">
+        <label for="email">Email</label>
+        <input
+          id="email"
+          type="email"
+          formControlName="email"
+          placeholder="example@gmail.com"
+        />
+
+        @if (form.controls.email.touched && form.controls.email.hasError('required')) {
+          <small>Email is required</small>
+        }
+
+        @if (form.controls.email.touched && form.controls.email.hasError('email')) {
+          <small>Email format is invalid</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="password">Password</label>
+        <input
+          id="password"
+          type="password"
+          formControlName="password"
+          placeholder="Password"
+        />
+
+        @if (form.controls.password.touched && form.controls.password.hasError('required')) {
+          <small>Password is required</small>
+        }
+
+        @if (form.controls.password.touched && form.controls.password.hasError('minlength')) {
+          <small>Password must contain at least 6 characters</small>
+        }
+      </div>
+
+      <div class="field">
+        <label for="confirmPassword">Confirm password</label>
+        <input
+          id="confirmPassword"
+          type="password"
+          formControlName="confirmPassword"
+          placeholder="Repeat password"
+        />
+
+        @if (form.controls.confirmPassword.touched && form.controls.confirmPassword.hasError('required')) {
+          <small>Confirm password is required</small>
+        }
+      </div>
+
+      <button type="submit">
+        Register
+      </button>
+    </form>
+
+    <a routerLink="/login">Already have an account?</a>
+  </section>
+</main>
