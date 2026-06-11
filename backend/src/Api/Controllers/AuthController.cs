@@ -24,7 +24,10 @@ namespace AuthTest.Src.Api.Controllers
             [FromBody] RegisterRequest request,
             CancellationToken ct)
         {
-            var result = await _mediator.Send(request, ct);
+            var result = await _mediator.Send(new RegisterCommand(
+                request.email,
+                request.password
+            ), ct);
 
             return Ok(result);    
         }
