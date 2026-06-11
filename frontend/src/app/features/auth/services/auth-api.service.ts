@@ -12,7 +12,7 @@ import { RegisterRequest } from '../models/register-request';
 export class AuthApiService {
   private readonly http = inject(HttpClient);
 
-  private readonly apiUrl = 'https://localhost:5092/api/auth';
+  private readonly apiUrl = 'http://127.0.0.1:5092/api/auth';
 
   login(request: LoginRequest): Observable<LoginResponse> {
     return this.http.post<LoginResponse>(`${this.apiUrl}/login`, request);

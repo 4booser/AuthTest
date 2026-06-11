@@ -34,6 +34,11 @@ export class Register {
   });
 
   protected submit(): void {
+    this.form.markAllAsTouched();
+
+    if (this.form.invalid) {
+      return;
+    }
     const formValue = this.form.getRawValue();
 
     if (formValue.password !== formValue.confirmPassword) {

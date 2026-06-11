@@ -34,7 +34,12 @@ export class Login {
       return;
     }
 
-    const request: LoginRequest = this.form.getRawValue();
+    const formValue = this.form.getRawValue();
+
+    const request: LoginRequest = {
+      email: formValue.email!,
+      password: formValue.password!
+    };
 
     this.isLoading.set(true);
 
@@ -44,7 +49,7 @@ export class Login {
         this.isLoading.set(false);
       },
       error: error => {
-        console.error('Login error:', error);
+        console.log('Login error:', error);
         this.isLoading.set(false);
       }
     });
