@@ -2,9 +2,11 @@ namespace AuthTest.Src.Application.Common.Exceptions;
 
 public sealed class ValidationException : AppException
 {
-    public ValidationException(string message)
-        : base(message, StatusCodes.Status400BadRequest)
-    {
+    public IReadOnlyDictionary<string, string[]> Errors { get; }
 
+    public ValidationException(IReadOnlyDictionary<string, string[]> errors)
+        : base("Validation failed", StatusCodes.Status400BadRequest)
+    {
+        Errors = errors;
     }
 }

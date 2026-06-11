@@ -5,6 +5,7 @@ using MediatR;
 
 namespace AuthTest.Src.Api.Controllers
 {
+    [Route("api/auth")]
     public class AuthController : ControllerBase
     {
         private readonly ILogger<AuthController> _logger;
@@ -19,11 +20,12 @@ namespace AuthTest.Src.Api.Controllers
         }
 
         [HttpPost]
-        [Route("api/auth/register")]
+        [Route("register")]
         public async Task<ActionResult> Register(
             [FromBody] RegisterRequest request,
             CancellationToken ct)
         {
+
             var result = await _mediator.Send(new RegisterCommand(
                 request.email,
                 request.password
@@ -33,13 +35,13 @@ namespace AuthTest.Src.Api.Controllers
         }
 
         [HttpPost]
-        [Route("api/auth/login")]
+        [Route("login")]
         public async Task<ActionResult<LoginResponse>> Login(
             [FromBody] LoginRequest request,
             CancellationToken ct)
         {
             var result = await _mediator.Send(new LoginCommand(
-                request.email, 
+                request.login, 
                 request.password), ct);
 
             return Ok(result);

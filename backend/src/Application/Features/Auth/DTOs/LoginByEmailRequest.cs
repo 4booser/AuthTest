@@ -1,7 +1,7 @@
 namespace AuthTest.Src.Application.Features.Auth.DTOs
 {
-    public record LoginRequest(
-        string login,
+    public record LoginByEmailRequest(
+        string email,
         string password
     );
 }
