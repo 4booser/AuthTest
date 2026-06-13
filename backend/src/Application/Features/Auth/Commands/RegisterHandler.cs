@@ -1,12 +1,22 @@
+using System.Security.Claims;
 using AuthApi.Src.Domain.Entities;
 using AuthTest.Src.Application.Common.Exceptions;
 using AuthTest.Src.Application.Features.Auth.DTOs;
+using AuthTest.Src.Application.Features.Auth.Services.Interfaces;
 using MediatR;
 
 namespace AuthTest.Src.Application.Features.Auth.Commands
 {
     public class RegisterHandler : IRequestHandler<RegisterCommand, LoginResponse>
     {
+        private readonly IHasher _hasher;
+        private readonly IJwtService _jwtService;
+
+        public RegisterHandler(IHasher hasher, IJwtService jwtService)
+        {
+            _hasher = hasher;
+            _jwtService = jwtService;
+        }
         public async Task<LoginResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
         {
           Dictionary<string, string[]> errors = new Dictionary<string, string[]>();
@@ -35,12 +45,21 @@ namespace AuthTest.Src.Application.Features.Auth.Commands
             {
                 FirstName = request.FirstName,
                 LastName = request.LastName,
-                PasswordHash = "" 
+                PasswordHash = _hasher.Hash(request.Password)
             };
+
+            user.SetEmail(request.Email);
+            user.SetPhone(request.Phone);
+            user.SetLogin(request.Login);
             
+            Claim[] claims = new Claim[]
+            {
+                new Claim(ClaimTypes.Name, user.FirstName)
+            };
+
             return new LoginResponse(
-                accessToken: "1234567890abcdef",
-                refreshToken: "abcdef1234567890",
+                accessToken: _jwtService.CreateAccessToken(claims),
+                refreshToken: _jwtService.CreateRefreshToken(),
                 expiresAt: DateTime.UtcNow.AddMinutes(15)
             );
         }

@@ -7,23 +7,23 @@ using System.Security.Claims;
 
 namespace AuthTest.Src.Application.Features.Auth.Commands
 {
-    public class LoginHandler : IRequestHandler<LoginCommand, LoginResponse>
+    public class EmailLoginHandler : IRequestHandler<EmailLoginCommand, LoginResponse>
     {
         private readonly IHasher _hasher;
         private readonly IJwtService _jwtService;
 
-        public LoginHandler(IHasher hasher, IJwtService jwtService)
+        public EmailLoginHandler(IHasher hasher, IJwtService jwtService)
         {
             _hasher = hasher;
             _jwtService = jwtService;
         }
 
-        public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+        public async Task<LoginResponse> Handle(EmailLoginCommand request, CancellationToken cancellationToken)
         {
             Dictionary<string, string[]> errors = new Dictionary<string, string[]>();
 
-            if (string.IsNullOrEmpty(request.Login))
-                errors.Add("Login", new[] { "Login is required." });             
+            if (string.IsNullOrEmpty(request.Email))
+                errors.Add("Email", new[] { "Email is required." });             
             
             if(string.IsNullOrEmpty(request.Password))
                 errors.Add("Password", new[] { "Password is required." });
@@ -31,8 +31,13 @@ namespace AuthTest.Src.Application.Features.Auth.Commands
             if (errors.Any())
                 throw new ValidationException(errors);
 
-            if(request.Login.Length < 8 || request.Login.Length > 25)
-                errors.Add("Login", new[] { "Login must be between 8 and 25 characters." });
+            string[] parts = request.Email.Split('@');
+
+            if(parts.Length != 2)
+                errors.Add("Email", new[] { "Email is not valid." });
+
+            if(request.Email.Length < 8 || request.Email.Length > 25)
+                errors.Add("Email", new[] { "Email must be between 8 and 25 characters." });
 
             if(request.Password.Length < 8 || request.Password.Length > 20)
                 errors.Add("Password", new[] { "Password must be between 8 and 20 characters." });
@@ -41,14 +46,14 @@ namespace AuthTest.Src.Application.Features.Auth.Commands
                 throw new ValidationException(errors);
 
 
-            string passwordHash = _hasher.Hash(request.Password); // In a real application, you would hash the password
-            
+            string passwordHash = _hasher.Hash(request.Password);
+
             // Here you would typically validate the user's credentials against a database
             // For this example, we'll just return a dummy token if the email and password are not empty
             
             Claim[] claims = new Claim[]
             {
-                new Claim(ClaimTypes.Name, request.Login)
+                new Claim(ClaimTypes.Email, request.Email)
             };
             
             return new LoginResponse(

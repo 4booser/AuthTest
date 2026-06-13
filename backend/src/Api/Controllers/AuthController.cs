@@ -27,6 +27,10 @@ namespace AuthTest.Src.Api.Controllers
         {
 
             var result = await _mediator.Send(new RegisterCommand(
+                request.firstName,
+                request.lastName,
+                request.login,
+                request.phone,
                 request.email,
                 request.password
             ), ct);
@@ -42,6 +46,19 @@ namespace AuthTest.Src.Api.Controllers
         {
             var result = await _mediator.Send(new LoginCommand(
                 request.login, 
+                request.password), ct);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("login-by-email")]
+        public async Task<ActionResult<LoginResponse>> EmailLogin(
+            [FromBody] EmailLoginRequest request,
+            CancellationToken ct)
+        {
+            var result = await _mediator.Send(new EmailLoginCommand(
+                request.email,
                 request.password), ct);
 
             return Ok(result);

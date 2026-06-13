@@ -4,7 +4,7 @@ using AuthTest.Src.Application.Features.Auth.DTOs;
 namespace AuthTest.Src.Application.Features.Auth.Commands
 {
     public record LoginCommand(
-        string Email,
+        string Login,
         string Password
     ) : IRequest<LoginResponse> {}
 }

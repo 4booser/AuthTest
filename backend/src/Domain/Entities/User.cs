@@ -16,8 +16,9 @@ namespace AuthApi.Src.Domain.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
 
-        public void SetEmail(string email) { Email = email; }
         public void SetLogin(string login) { Login = login; }
+        public void SetPhone(string phone) { Phone = phone; }
+        public void SetEmail(string email) { Email = email; }
         public void Deactivate() { IsActive = false; }
     }
 }
