@@ -5,6 +5,7 @@ import { AuthApiService } from '../../services/auth-api.service';
 
 import { ReactiveFormsModule, FormControl, FormGroup, Validators } from '@angular/forms';
 import { RegisterForm } from '../../models/register-form';
+import { response } from 'express';
 
 @Component({
   selector: 'app-register',
@@ -66,14 +67,14 @@ export class Register {
     this.isLoading.set(true);
 
     this.authApi.register(request).subscribe({
-      next: () => {
-        console.log('Register success');
+      next: (response) => {
+        console.log('Register response: ', response);
         this.isLoading.set(false);
       },
-      error: error => {
+      error: (error) => {
         console.error('Register error:', error);
         this.isLoading.set(false);
-      }
+      } 
     });
   }
 }
